@@ -3,6 +3,7 @@ const cluster = require("cluster");
 const totalCPUs = require('os').cpus().length;
 
 const fabObj = require("./math-logic/fibonacci-series");
+
 if (cluster.isMaster) {
     
     console.log(`Total Number of CPU Counts is ${totalCPUs}`);
@@ -10,17 +11,24 @@ if (cluster.isMaster) {
     for (var i = 0; i < totalCPUs; i++) {
         cluster.fork();
     }
+
     cluster.on("online", worker => {
         console.log(`Worker Id is ${worker.id} and PID is ${worker.process.pid}`);
     });
+
     cluster.on("exit", worker => {
         console.log(`Worker Id ${worker.id} and PID is ${worker.process.pid} is offline`);
         console.log("Let's fork new worker!");
         cluster.fork();
     });
-}
-else {
+
+}else{
+
     const app = express();
+
+    /*
+        Here we can simulate multiple requests did over different workers
+    */
     app.get("/", (request, response) => {
         console.log(`Worker Process Id - ${cluster.worker.process.pid} has accepted the request!`);
         let number = fabObj.calculateFibonacciValue(Number.parseInt(request.query.number));
