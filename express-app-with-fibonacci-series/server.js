@@ -3,7 +3,11 @@ const express = require("express");
 const fabObj = require("./math-logic/fibonacci-series");
 
 const app = express();
-// http://localhost:3000?number=10
+
+/* 
+    Express route to return fibonacci result of "10" into the line below:
+    http://localhost:3000?number=10 
+*/
 app.get("/", (request, response) => {
     let number = fabObj.calculateFibonacciValue(Number.parseInt(request.query.number));
     response.send(`<h1>${number}</h1>`);
